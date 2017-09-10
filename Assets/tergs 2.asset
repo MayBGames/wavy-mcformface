@@ -1,0 +1,242 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 849a5bb521d0940b0b1c6f97103a5221, type: 3}
+  m_Name: tergs 2
+  m_EditorClassIdentifier: 
+  Volume:
+    Level: 0.554
+  Context:
+    LowOctave: 0
+    HighOctave: 6
+    CurrentOctave: 2
+    NoteIndex: 11
+  Noise:
+    ShowProperties: 1
+    Enabled: 1
+    Level: 0.25
+    Variance:
+      Min: 0.8857145
+      Max: 1
+    Curve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 2
+        time: 0
+        value: 0.5207596
+        inSlope: -1.7909905
+        outSlope: -1.7909905
+        tangentMode: 0
+      - serializedVersion: 2
+        time: 0.36832947
+        value: 0.9606097
+        inSlope: -1.1521578
+        outSlope: -1.1521578
+        tangentMode: 0
+      - serializedVersion: 2
+        time: 0.7168789
+        value: 0.115479946
+        inSlope: 0.93370676
+        outSlope: 0.93370676
+        tangentMode: 0
+      - serializedVersion: 2
+        time: 1
+        value: 0.5138397
+        inSlope: -1.9964191
+        outSlope: -1.9964191
+        tangentMode: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 0
+  Disruption:
+    ShowProperties: 1
+    Enabled: 0
+    Time:
+      Milliseconds: 50
+      Seconds: 0
+      Minutes: 0
+      Hours: 0
+    Curve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 2
+        time: 0
+        value: 0.5
+        inSlope: 0.1854336
+        outSlope: 0.1854336
+        tangentMode: 0
+      - serializedVersion: 2
+        time: 1
+        value: 0.5
+        inSlope: 0.226645
+        outSlope: 0.226645
+        tangentMode: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 0
+  RiseAndDecay:
+    Rise:
+      Time: 20
+      Curve:
+        serializedVersion: 2
+        m_Curve:
+        - serializedVersion: 2
+          time: 0
+          value: 0
+          inSlope: 0
+          outSlope: 0
+          tangentMode: 0
+        - serializedVersion: 2
+          time: 1
+          value: 1
+          inSlope: 0
+          outSlope: 0
+          tangentMode: 0
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+    Decay:
+      Time: 20
+      Curve:
+        serializedVersion: 2
+        m_Curve:
+        - serializedVersion: 2
+          time: 0
+          value: 1
+          inSlope: 0
+          outSlope: 0
+          tangentMode: 0
+        - serializedVersion: 2
+          time: 1
+          value: 0
+          inSlope: 0
+          outSlope: 0
+          tangentMode: 0
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+  Harmonics:
+    ShowProperties: 1
+    Enabled: 1
+    UpperCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 2
+        time: 0
+        value: 0.5
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+      - serializedVersion: 2
+        time: 0.47900784
+        value: 0.26573485
+        inSlope: -0.7484853
+        outSlope: -0.7484853
+        tangentMode: 0
+      - serializedVersion: 2
+        time: 0.9313692
+        value: 0.14439905
+        inSlope: -0.37193298
+        outSlope: -0.37193298
+        tangentMode: 0
+      - serializedVersion: 2
+        time: 1
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 0
+    LowerCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 2
+        time: 0
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+      - serializedVersion: 2
+        time: 1
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 0
+    ShowDetails: 0
+  FrequencyLimit:
+    ShowProperties: 1
+    Enabled: 0
+    Curve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 2
+        time: 0
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+      - serializedVersion: 2
+        time: 1
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 0
+    ShowDetails: 0
+  Waves:
+    Selected:
+    - 1
+    - 0
+    - 1
+    - 0
+  SamplingFrequency: 48
+  Notes:
+  - 16.351
+  - 17.324
+  - 18.354
+  - 19.445
+  - 20.601
+  - 21.827
+  - 23.124
+  - 24.499
+  - 25.956
+  - 27.5
+  - 29.135
+  - 30.868
+  Offsets:
+  - 0
+  - 0.973
+  - 1.03
+  - 1.091
+  - 1.156
+  - 1.226
+  - 1.297
+  - 1.375
+  - 1.457
+  - 1.544
+  - 1.635
+  - 1.733
+  Phases:
+  - 3.3192086
+  - 6.267664
+  - 0.8405037
+  - 2.8190236
+  - 2.650131
+  - 4.206574
+  - 5.92664
+  - 1.077305
+  - 3.764366
+  - 2.6966808
