@@ -14,6 +14,16 @@ public class Wave {
     new SawtoothWave()
   };
 
+  /*
+    This is where the magic happens!
+
+    This method uses the input provided to generate and return the amplitude
+    value for the current data slice being processed (from WavyMcFormface.OnAudioFilterRead).
+
+    This method is called once for each iteration through the OnAudioFilterRead's
+    data array. The value returned from this method is assigned to the appropriate
+    element of the data array.
+   */
   public float Evaluate(int note_index, float octave, float rise, float position, float pass, bsgbryan.ConfigieMcWaveface configie) {
     float generated_amplitude = 0f;
 
@@ -40,6 +50,13 @@ public class Wave {
     return generated_amplitude;
   }
 
+  /*
+    Determine the multiplier needed to get our octave zero note to the
+    frequency we need.
+
+    Luckily, octave frequencies double as you go up, so figuring the
+    multiplier out is pretty straight forward - yay!
+   */
   public float DetermineOctave(float index) {
     float multiplier = (index + 1f);
 
@@ -52,6 +69,10 @@ public class Wave {
     return multiplier;
   }
 
+  /*
+    Modify our core note tone by applying any Enabled processors, taking the
+    range of rendered octaves into consideration
+   */
   float ProcessNote(int note_index, float octave, float rise, float position, float volume_adjust, float pass, bsgbryan.ConfigieMcWaveface configie) {
     float limit = 1f;
     float note  = configie.Notes[note_index] * DetermineOctave(octave);
@@ -92,17 +113,20 @@ public class Wave {
   float ApplyNoise(float pass, bsgbryan.ConfigieMcWaveface configie) {
     float noise = (float) rand.NextDouble();
 
-    if (noise >= configie.Noise.Variance.Min && noise <= configie.Noise.Variance.Max) {
+    if (noise >= configie.Noise.Variance.CurrentMin && noise <= configie.Noise.Variance.CurrentMax) {
       noise = noise - (noise * 0.5f);
 
       float curve = configie.Noise.CurrentCurve.Evaluate(pass);
 
-      return (noise + curve) * configie.Noise.Level;
+      return (noise + curve) * configie.Noise.CurrentLevel;
     } else {
       return 0f;
     }
   }
 
+  /*
+    Set each of our four available WaveVolumes as Selected
+   */
   float ProcessWaveVolumes(int octave, float amp, bsgbryan.ConfigieMcWaveface configie) {
     float output = 0f;
 
@@ -115,16 +139,27 @@ public class Wave {
     return output;
   }
 
+  /*
+    Keep track of where we are in our waveform
+   */
   float DetermineIncrement(float note, bsgbryan.ConfigieMcWaveface configie) {
     return (note * 2.0f * Mathf.PI) / (float) configie.SampleRate;
   }
 
+  /*
+    Keep our waveform in bounds
+   */
   void WrapPhaseIfNeeded(int index, bsgbryan.ConfigieMcWaveface configie) {
     if (configie.Phases[index] > (2 * Mathf.PI)) {
       configie.Phases[index] -= 2 * Mathf.PI;
     }
   }
 
+  /*
+    This is mainly used to adjust harmonic volumes. The adjust property for
+    our primary note will always be 1f. adjust values for harmonic notes is
+    determined by evaluating Harmonics.LowerCurve and Harmonics.UpperCurve.
+   */
   float Amplitude(float volume, float adjust) {
     return volume * adjust;
   }

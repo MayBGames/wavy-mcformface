@@ -26,8 +26,8 @@ namespace bsgbryan {
           configie.PlayControls.CurrentOctave = 4;
           configie.PlayControls.NoteIndex     = 9;
 
-          configie.Envelope.Rise.Curve = AnimationCurve.EaseInOut(0f, 0f, 1f, 1f);
-          configie.Envelope.Rise.Time  = 200;
+          configie.Envelope.Attack.Curve = AnimationCurve.EaseInOut(0f, 0f, 1f, 1f);
+          configie.Envelope.Attack.Time  = 200;
 
           configie.Envelope.Decay.Curve = AnimationCurve.EaseInOut(0f, 1f, 1f, 0f);
           configie.Envelope.Decay.Time  = 1000;

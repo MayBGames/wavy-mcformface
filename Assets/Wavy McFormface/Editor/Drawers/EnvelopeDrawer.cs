@@ -61,7 +61,7 @@ namespace bsgbryan {
         Rect attack_curve_pos  = new Rect(position.x,               row_three, curve_width, curve_height);
         Rect decay_curve_pos = new Rect(position.x + curve_width, row_three, curve_width, curve_height);
 
-        SerializedProperty attack  = property.FindPropertyRelative("Rise");
+        SerializedProperty attack  = property.FindPropertyRelative("Attack");
         SerializedProperty decay = property.FindPropertyRelative("Decay");
 
         SerializedProperty attack_time  = attack.FindPropertyRelative("Time");

@@ -8,39 +8,45 @@ namespace bsgbryan {
 
     private Wave wave = new Wave();
 
-    private int   note;
-    private float octave;
-    private long  hit;
-    private long  released;
-    private bool  tapped;
-
-    private float previous_rise = 0f;
-
-    private float passes = 0;
-
-    private float rise_lerp_goal = 0f;
-
     private int samples_per_second;
 
-    private float loose_lerp_iterations;
-    private float detailed_lerp_iterations = 1024f;
+    #region Play related properties
+      private int   note;
+      private float octave;
+      private long  hit;
+      private long  released;
+      private bool  tapped;
+    #endregion
 
-    private int   master_volume_lerp_progress = 0;
-    private int[] wave_volumes_lerp_progress  = new int[4] {
-      0, 0, 0, 0
-    };
+    #region Lerp related properties
+      private float passes = 0;
 
-    private int lower_harmonic_lerp_progress  = 0;
-    private int upper_harmonic_lerp_progress  = 0;
-    private int frequency_limit_lerp_progress = 0;
-    private int disruption_lerp_progress      = 0;
-    private int noise_curve_lerp_progress     = 0;
+      private float previous_rise  = 0f;
+      private float rise_lerp_goal = 0f;
 
-    private bool lower_harmonic_is_lerping  = false;
-    private bool upper_harmonic_is_lerping  = false;
-    private bool frequency_limit_is_lerping = false;
-    private bool disruption_is_lerping      = false;
-    private bool noise_curve_is_lerping     = false;
+      private float loose_lerp_iterations;
+      private float detailed_lerp_iterations = 1024f;
+
+      private int   noise_variance_min_lerp_progress = 0;
+      private int   noise_variance_max_lerp_progress = 0;
+      private int   noise_level_lerp_progress        = 0;
+      private int   master_volume_lerp_progress      = 0;
+      private int[] wave_volumes_lerp_progress       = new int[4] {
+        0, 0, 0, 0
+      };
+
+      private int lower_harmonic_lerp_progress  = 0;
+      private int upper_harmonic_lerp_progress  = 0;
+      private int frequency_limit_lerp_progress = 0;
+      private int disruption_lerp_progress      = 0;
+      private int noise_curve_lerp_progress     = 0;
+
+      private bool lower_harmonic_is_lerping  = false;
+      private bool upper_harmonic_is_lerping  = false;
+      private bool frequency_limit_is_lerping = false;
+      private bool disruption_is_lerping      = false;
+      private bool noise_curve_is_lerping     = false;
+    #endregion
 
     [SerializeField]
     public bsgbryan.ConfigieMcWaveface Configie;
@@ -50,19 +56,23 @@ namespace bsgbryan {
       loose_lerp_iterations = (float) samples_per_second;
     }
 
+    /*
+      If a note was tapped and it's been playing for its Attack time, stop
+      playing it
+     */
     void Update() {
-      if (tapped == true && hit > 0 && System.DateTime.Now.Ticks - hit > (Configie.Envelope.Rise.Time * 10000) * 2) {
+      if (tapped == true && hit > 0 && System.DateTime.Now.Ticks - hit > (Configie.Envelope.Attack.Time * 10000) * 2) {
         StopPlaying();
       }
     }
 
-    float CalculateRise() {
+    float CalculateAttack() {
       if (hit > 0) {
         float ticks_risen   = (System.DateTime.Now.Ticks - hit) * 0.0001f;
-        float rise_duration = Configie.Envelope.Rise.Time;
+        float rise_duration = Configie.Envelope.Attack.Time;
 
         if (ticks_risen < rise_duration) {
-          return Configie.Envelope.Rise.Curve.Evaluate(ticks_risen / rise_duration);
+          return Configie.Envelope.Attack.Curve.Evaluate(ticks_risen / rise_duration);
         } else {
           return 1f;
         }
@@ -82,6 +92,9 @@ namespace bsgbryan {
       return 0f;
     }
 
+    /*
+      This builds our waveform
+     */
     void OnAudioFilterRead(float[] data, int channels) {
       // #if UNITY_EDITOR
       //   long started = System.DateTime.Now.Ticks;
@@ -104,9 +117,7 @@ namespace bsgbryan {
         }
       }
 
-      UpdateLerpGoals();
-
-      rise_lerp_goal = CalculateRise();
+      rise_lerp_goal = CalculateAttack();
 
       for (int i = 0; i < length; i += channels) {
         pass = counter++ / max_count;
@@ -115,12 +126,12 @@ namespace bsgbryan {
           position = passes++ / limit;
         }
 
-        float rise = SmoothVolumeTransition(
+        float rise = SmoothFloatTransition(
           previous_rise,
           rise_lerp_goal,
           pass);
 
-          DoDetailedLerps();
+        DoFastLerps();
 
         data[i] = wave.Evaluate(note, octave, rise, position, pass, Configie);
 
@@ -129,7 +140,7 @@ namespace bsgbryan {
         }
       }
 
-      LerpProperties();
+      DoSlowLerps();
 
       previous_rise = rise_lerp_goal;
 
@@ -140,166 +151,238 @@ namespace bsgbryan {
       // #endif
     }
 
-    void DoDetailedLerps() {
-      if (master_volume_lerp_progress == 0 &&
-          Configie.Volume.CurrentLevel != Configie.Volume.Level) {
-        Configie.Volume.PreviousLevel = Configie.Volume.CurrentLevel;
-      }
-
-      float master_volume_lerp_position = master_volume_lerp_progress++ / detailed_lerp_iterations;
-
-      Configie.Volume.CurrentLevel = SmoothVolumeTransition(
-        Configie.Volume.PreviousLevel,
-        Configie.Volume.Level,
-        master_volume_lerp_position
-      );
-
-      if (Configie.Volume.CurrentLevel == Configie.Volume.Level) {
-        Configie.Volume.PreviousLevel = Configie.Volume.CurrentLevel;
-        master_volume_lerp_progress = 0;
-      }
-
-      for (int s = 0; s < Configie.WaveVolumes.Selected.Length; s++) {
-        if (wave_volumes_lerp_progress[s] == 0 &&
-            Configie.WaveVolumes.CurrentSelected[s] != Configie.WaveVolumes.Selected[s]) {
-          Configie.WaveVolumes.PreviousSelected[s] = Configie.WaveVolumes.CurrentSelected[s];
+    /*
+      These are called fast lerps because the only take 1/48th second to complete
+     */
+    void DoFastLerps() {
+      #region Volume.Level lerp
+        if (master_volume_lerp_progress == 0 &&
+            Configie.Volume.CurrentLevel != Configie.Volume.Level) {
+          Configie.Volume.PreviousLevel = Configie.Volume.CurrentLevel;
         }
 
-        float wave_volumes_lerp_position = wave_volumes_lerp_progress[s]++ / detailed_lerp_iterations;
-
-        Configie.WaveVolumes.CurrentSelected[s] = SmoothVolumeTransition(
-          Configie.WaveVolumes.PreviousSelected[s],
-          Configie.WaveVolumes.Selected[s],
-          wave_volumes_lerp_position
+        Configie.Volume.CurrentLevel = SmoothFloatTransition(
+          Configie.Volume.PreviousLevel,
+          Configie.Volume.Level,
+          master_volume_lerp_progress++ / detailed_lerp_iterations
         );
 
-        if (Configie.WaveVolumes.CurrentSelected[s] == Configie.WaveVolumes.Selected[s]) {
-          Configie.WaveVolumes.PreviousSelected[s] = Configie.WaveVolumes.CurrentSelected[s];
-          wave_volumes_lerp_progress[s]    = 0;
+        if (Configie.Volume.CurrentLevel == Configie.Volume.Level) {
+          Configie.Volume.PreviousLevel = Configie.Volume.CurrentLevel;
+          master_volume_lerp_progress = 0;
         }
-      }
+      #endregion
+
+      #region WaveVolumes lerp
+        for (int s = 0; s < Configie.WaveVolumes.Selected.Length; s++) {
+          if (wave_volumes_lerp_progress[s] == 0 &&
+              Configie.WaveVolumes.CurrentSelected[s] != Configie.WaveVolumes.Selected[s]) {
+            Configie.WaveVolumes.PreviousSelected[s] = Configie.WaveVolumes.CurrentSelected[s];
+          }
+
+          Configie.WaveVolumes.CurrentSelected[s] = SmoothFloatTransition(
+            Configie.WaveVolumes.PreviousSelected[s],
+            Configie.WaveVolumes.Selected[s],
+            wave_volumes_lerp_progress[s]++ / detailed_lerp_iterations
+          );
+
+          if (Configie.WaveVolumes.CurrentSelected[s] == Configie.WaveVolumes.Selected[s]) {
+            Configie.WaveVolumes.PreviousSelected[s] = Configie.WaveVolumes.CurrentSelected[s];
+            wave_volumes_lerp_progress[s]    = 0;
+          }
+        }
+      #endregion
+
+      #region Noise.Variance.Min lerp
+        if (noise_variance_min_lerp_progress == 0 &&
+            Configie.Noise.Variance.CurrentMin != Configie.Noise.Variance.Min) {
+          Configie.Noise.Variance.PreviousMin = Configie.Noise.Variance.CurrentMin;
+        }
+
+        Configie.Noise.Variance.CurrentMin = SmoothFloatTransition(
+          Configie.Noise.Variance.PreviousMin,
+          Configie.Noise.Variance.Min,
+          noise_variance_min_lerp_progress++ / detailed_lerp_iterations
+        );
+
+        if (Configie.Noise.Variance.CurrentMin == Configie.Noise.Variance.Min) {
+          Configie.Noise.Variance.PreviousMin = Configie.Noise.Variance.CurrentMin;
+          noise_variance_min_lerp_progress = 0;
+        }
+      #endregion
+
+      #region Noise.Variance.Max lerp
+        if (noise_variance_max_lerp_progress == 0 &&
+            Configie.Noise.Variance.CurrentMax != Configie.Noise.Variance.Max) {
+          Configie.Noise.Variance.PreviousMax = Configie.Noise.Variance.CurrentMax;
+        }
+
+        Configie.Noise.Variance.CurrentMax = SmoothFloatTransition(
+          Configie.Noise.Variance.PreviousMax,
+          Configie.Noise.Variance.Max,
+          noise_variance_max_lerp_progress++ / detailed_lerp_iterations
+        );
+
+        if (Configie.Noise.Variance.CurrentMax == Configie.Noise.Variance.Max) {
+          Configie.Noise.Variance.PreviousMax = Configie.Noise.Variance.CurrentMax;
+          noise_variance_max_lerp_progress = 0;
+        }
+      #endregion
+
+      #region Noise.Level lerp
+        if (noise_level_lerp_progress == 0 &&
+            Configie.Noise.CurrentLevel != Configie.Noise.Level) {
+          Configie.Noise.PreviousLevel = Configie.Noise.CurrentLevel;
+        }
+
+        Configie.Noise.CurrentLevel = SmoothFloatTransition(
+          Configie.Noise.PreviousLevel,
+          Configie.Noise.Level,
+          noise_level_lerp_progress++ / detailed_lerp_iterations
+        );
+
+        if (Configie.Noise.CurrentLevel == Configie.Noise.Level) {
+          Configie.Noise.PreviousLevel = Configie.Noise.CurrentLevel;
+          noise_level_lerp_progress = 0;
+        }
+      #endregion
     }
 
-    void LerpProperties() {
-      if (lower_harmonic_is_lerping == true) {
-        float lower_harmonic_lerp_position = lower_harmonic_lerp_progress++ / loose_lerp_iterations;
+    /*
+      These are called slow lerps because they take a full second (48 calls to
+      OnAudioFilterRead) to complete
+     */
+    void DoSlowLerps() {
+      #region Harmonics.LowerCurve lerp
+        if (lower_harmonic_is_lerping == false &&
+            Configie.Harmonics.CurrentLowerCurve.EqualTo(Configie.Harmonics.LowerCurve) == false) {
+          Configie.Harmonics.PreviousLowerCurve.keys = Configie.Harmonics.CurrentLowerCurve.keys;
+          Configie.Harmonics.FrozenLowerCurve.keys   = Configie.Harmonics.LowerCurve.keys;
 
-        Configie.Harmonics.CurrentLowerCurve = Configie.Harmonics.PreviousLowerCurve.Lerp(
-          Configie.Harmonics.FrozenLowerCurve,
-          lower_harmonic_lerp_position
-        );
-
-        if (Configie.Harmonics.CurrentLowerCurve.EqualTo(Configie.Harmonics.FrozenLowerCurve) == true) {
-          Configie.Harmonics.PreviousLowerCurve.keys = Configie.Harmonics.FrozenLowerCurve.keys;
-          lower_harmonic_lerp_progress             = 0;
-          lower_harmonic_is_lerping                = false;
+          lower_harmonic_is_lerping = true;
         }
-      }
 
-      if (upper_harmonic_is_lerping == true) {
-        float upper_harmonic_lerp_position = upper_harmonic_lerp_progress++ / loose_lerp_iterations;
+        if (lower_harmonic_is_lerping == true) {
+          float lower_harmonic_lerp_position = lower_harmonic_lerp_progress++ / loose_lerp_iterations;
 
-        Configie.Harmonics.CurrentUpperCurve = Configie.Harmonics.CurrentUpperCurve.Lerp(
-          Configie.Harmonics.FrozenUpperCurve,
-          upper_harmonic_lerp_position
-        );
+          Configie.Harmonics.CurrentLowerCurve = Configie.Harmonics.PreviousLowerCurve.Lerp(
+            Configie.Harmonics.FrozenLowerCurve,
+            lower_harmonic_lerp_position
+          );
 
-        if (Configie.Harmonics.CurrentUpperCurve.EqualTo(Configie.Harmonics.FrozenUpperCurve)) {
-          Configie.Harmonics.PreviousUpperCurve.keys = Configie.Harmonics.FrozenUpperCurve.keys;
-          upper_harmonic_lerp_progress             = 0;
-          upper_harmonic_is_lerping                = false;
+          if (Configie.Harmonics.CurrentLowerCurve.EqualTo(Configie.Harmonics.FrozenLowerCurve) == true) {
+            Configie.Harmonics.PreviousLowerCurve.keys = Configie.Harmonics.FrozenLowerCurve.keys;
+            lower_harmonic_lerp_progress             = 0;
+            lower_harmonic_is_lerping                = false;
+          }
         }
-      }
+      #endregion
 
-      if (frequency_limit_is_lerping == true) {
-        float frequency_limit_lerp_position = frequency_limit_lerp_progress++ / loose_lerp_iterations;
+      #region Harmonics.UpperCurve lerp
+        if (upper_harmonic_is_lerping == false &&
+            Configie.Harmonics.CurrentUpperCurve.EqualTo(Configie.Harmonics.UpperCurve) == false) {
+          Configie.Harmonics.PreviousUpperCurve.keys = Configie.Harmonics.CurrentUpperCurve.keys;
+          Configie.Harmonics.FrozenUpperCurve.keys   = Configie.Harmonics.UpperCurve.keys;
 
-        Configie.FrequencyLimit.CurrentCurve = Configie.FrequencyLimit.PreviousCurve.Lerp(
-          Configie.FrequencyLimit.FrozenCurve,
-          frequency_limit_lerp_position
-        );
-
-        if (Configie.FrequencyLimit.CurrentCurve.EqualTo(Configie.FrequencyLimit.FrozenCurve)) {
-          Configie.FrequencyLimit.PreviousCurve.keys = Configie.FrequencyLimit.FrozenCurve.keys;
-          frequency_limit_lerp_progress            = 0;
-          frequency_limit_is_lerping               = false;
+          upper_harmonic_is_lerping = true;
         }
-      }
 
-      if (disruption_is_lerping == true) {
-        float disruption_lerp_position = disruption_lerp_progress++ / loose_lerp_iterations;
+        if (upper_harmonic_is_lerping == true) {
+          float upper_harmonic_lerp_position = upper_harmonic_lerp_progress++ / loose_lerp_iterations;
 
-        Configie.WibbleWobble.CurrentCurve = Configie.WibbleWobble.PreviousCurve.Lerp(
-          Configie.WibbleWobble.FrozenCurve,
-          disruption_lerp_position
-        );
+          Configie.Harmonics.CurrentUpperCurve = Configie.Harmonics.CurrentUpperCurve.Lerp(
+            Configie.Harmonics.FrozenUpperCurve,
+            upper_harmonic_lerp_position
+          );
 
-        if (Configie.WibbleWobble.CurrentCurve.EqualTo(Configie.WibbleWobble.FrozenCurve)) {
-          Configie.WibbleWobble.PreviousCurve.keys = Configie.WibbleWobble.FrozenCurve.keys;
-          disruption_lerp_progress             = 0;
-          disruption_is_lerping                = false;
+          if (Configie.Harmonics.CurrentUpperCurve.EqualTo(Configie.Harmonics.FrozenUpperCurve)) {
+            Configie.Harmonics.PreviousUpperCurve.keys = Configie.Harmonics.FrozenUpperCurve.keys;
+            upper_harmonic_lerp_progress             = 0;
+            upper_harmonic_is_lerping                = false;
+          }
         }
-      }
+      #endregion
 
-      if (noise_curve_is_lerping == true) {
-        float noise_curve_lerp_position = noise_curve_lerp_progress++ / loose_lerp_iterations;
+      #region FrequencyLimit.Curve lerp
+        if (frequency_limit_is_lerping == false &&
+            Configie.FrequencyLimit.CurrentCurve.EqualTo(Configie.FrequencyLimit.Curve) == false) {
+          Configie.FrequencyLimit.PreviousCurve.keys = Configie.FrequencyLimit.CurrentCurve.keys;
+          Configie.FrequencyLimit.FrozenCurve.keys   = Configie.FrequencyLimit.Curve.keys;
 
-        Configie.Noise.CurrentCurve = Configie.Noise.PreviousCurve.Lerp(
-          Configie.Noise.FrozenCurve,
-          noise_curve_lerp_position
-        );
-
-        if (Configie.Noise.CurrentCurve.EqualTo(Configie.Noise.FrozenCurve)) {
-          Configie.Noise.PreviousCurve.keys = Configie.Noise.FrozenCurve.keys;
-          noise_curve_lerp_progress       = 0;
-          noise_curve_is_lerping          = false;
+          frequency_limit_is_lerping = true;
         }
-      }
+
+        if (frequency_limit_is_lerping == true) {
+          float frequency_limit_lerp_position = frequency_limit_lerp_progress++ / loose_lerp_iterations;
+
+          Configie.FrequencyLimit.CurrentCurve = Configie.FrequencyLimit.PreviousCurve.Lerp(
+            Configie.FrequencyLimit.FrozenCurve,
+            frequency_limit_lerp_position
+          );
+
+          if (Configie.FrequencyLimit.CurrentCurve.EqualTo(Configie.FrequencyLimit.FrozenCurve)) {
+            Configie.FrequencyLimit.PreviousCurve.keys = Configie.FrequencyLimit.FrozenCurve.keys;
+            frequency_limit_lerp_progress            = 0;
+            frequency_limit_is_lerping               = false;
+          }
+        }
+      #endregion
+
+      #region Disruption.Curve lerp
+        if (disruption_is_lerping == false &&
+            Configie.WibbleWobble.CurrentCurve.EqualTo(Configie.WibbleWobble.Curve) == false) {
+          Configie.WibbleWobble.PreviousCurve.keys = Configie.WibbleWobble.CurrentCurve.keys;
+          Configie.WibbleWobble.FrozenCurve.keys   = Configie.WibbleWobble.Curve.keys;
+
+          disruption_is_lerping = true;
+        }
+
+        if (disruption_is_lerping == true) {
+          float disruption_lerp_position = disruption_lerp_progress++ / loose_lerp_iterations;
+
+          Configie.WibbleWobble.CurrentCurve = Configie.WibbleWobble.PreviousCurve.Lerp(
+            Configie.WibbleWobble.FrozenCurve,
+            disruption_lerp_position
+          );
+
+          if (Configie.WibbleWobble.CurrentCurve.EqualTo(Configie.WibbleWobble.FrozenCurve)) {
+            Configie.WibbleWobble.PreviousCurve.keys = Configie.WibbleWobble.FrozenCurve.keys;
+            disruption_lerp_progress             = 0;
+            disruption_is_lerping                = false;
+          }
+        }
+      #endregion
+
+      #region Noise.Curve lerp
+        if (noise_curve_is_lerping == false &&
+            Configie.Noise.CurrentCurve.EqualTo(Configie.Noise.Curve) == false) {
+          Configie.Noise.PreviousCurve.keys = Configie.Noise.CurrentCurve.keys;
+          Configie.Noise.FrozenCurve.keys   = Configie.Noise.Curve.keys;
+
+          noise_curve_is_lerping = true;
+        }
+
+        if (noise_curve_is_lerping == true) {
+          float noise_curve_lerp_position = noise_curve_lerp_progress++ / loose_lerp_iterations;
+
+          Configie.Noise.CurrentCurve = Configie.Noise.PreviousCurve.Lerp(
+            Configie.Noise.FrozenCurve,
+            noise_curve_lerp_position
+          );
+
+          if (Configie.Noise.CurrentCurve.EqualTo(Configie.Noise.FrozenCurve)) {
+            Configie.Noise.PreviousCurve.keys = Configie.Noise.FrozenCurve.keys;
+            noise_curve_lerp_progress       = 0;
+            noise_curve_is_lerping          = false;
+          }
+        }
+      #endregion
     }
 
-    void UpdateLerpGoals() {
-      if (lower_harmonic_is_lerping == false &&
-          Configie.Harmonics.CurrentLowerCurve.EqualTo(Configie.Harmonics.LowerCurve) == false) {
-        Configie.Harmonics.PreviousLowerCurve.keys = Configie.Harmonics.CurrentLowerCurve.keys;
-        Configie.Harmonics.FrozenLowerCurve.keys   = Configie.Harmonics.LowerCurve.keys;
-
-        lower_harmonic_is_lerping = true;
-      }
-
-      if (upper_harmonic_is_lerping == false &&
-          Configie.Harmonics.CurrentUpperCurve.EqualTo(Configie.Harmonics.UpperCurve) == false) {
-        Configie.Harmonics.PreviousUpperCurve.keys = Configie.Harmonics.CurrentUpperCurve.keys;
-        Configie.Harmonics.FrozenUpperCurve.keys   = Configie.Harmonics.UpperCurve.keys;
-
-        upper_harmonic_is_lerping = true;
-      }
-
-      if (frequency_limit_is_lerping == false &&
-          Configie.FrequencyLimit.CurrentCurve.EqualTo(Configie.FrequencyLimit.Curve) == false) {
-        Configie.FrequencyLimit.PreviousCurve.keys = Configie.FrequencyLimit.CurrentCurve.keys;
-        Configie.FrequencyLimit.FrozenCurve.keys   = Configie.FrequencyLimit.Curve.keys;
-
-        frequency_limit_is_lerping = true;
-      }
-
-      if (disruption_is_lerping == false &&
-          Configie.WibbleWobble.CurrentCurve.EqualTo(Configie.WibbleWobble.Curve) == false) {
-        Configie.WibbleWobble.PreviousCurve.keys = Configie.WibbleWobble.CurrentCurve.keys;
-        Configie.WibbleWobble.FrozenCurve.keys   = Configie.WibbleWobble.Curve.keys;
-
-        disruption_is_lerping = true;
-      }
-
-      if (noise_curve_is_lerping == false &&
-          Configie.Noise.CurrentCurve.EqualTo(Configie.Noise.Curve) == false) {
-        Configie.Noise.PreviousCurve.keys = Configie.Noise.CurrentCurve.keys;
-        Configie.Noise.FrozenCurve.keys   = Configie.Noise.Curve.keys;
-
-        noise_curve_is_lerping = true;
-      }
-    }
-
-    float SmoothVolumeTransition(float old_volume, float new_volume, float position) {
+    /*
+      Smoothly transition from one float value to another
+     */
+    float SmoothFloatTransition(float old_volume, float new_volume, float position) {
       if (old_volume != new_volume) {
         return Mathf.Lerp(old_volume, new_volume, position);
       } else {
@@ -307,18 +390,31 @@ namespace bsgbryan {
       }
     }
 
+    /*
+      Mark when a note started playing and delegate to StartPlaying
+      to actually begin play
+     */
     public void StartPlaying(int n, int o) {
       hit     = System.DateTime.Now.Ticks;
       note    = n;
       octave  = (float) o;
     }
 
+    /*
+      Tapping a note plays it for double its Attack. The note, rises over
+      the Attack time, sustains for the Atack time, and then decays over
+      the Decay time.
+     */
     public void Tap(int note, int octave) {
       tapped = true;
 
       StartPlaying(note, octave);
     }
 
+    /*
+      Reset all necessary properties to ensure our note decays and stops
+      playing
+     */
     public void StopPlaying() {
       hit      = 0;
       released = System.DateTime.Now.Ticks;

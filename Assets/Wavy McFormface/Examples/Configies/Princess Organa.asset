@@ -70,7 +70,7 @@ MonoBehaviour:
       m_RotationOrder: 4
   Envelope:
     ShowProperties: 1
-    Rise:
+    Attack:
       Time: 200
       Curve:
         serializedVersion: 2

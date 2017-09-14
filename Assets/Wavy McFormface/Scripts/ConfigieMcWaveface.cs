@@ -3,6 +3,17 @@ using UnityEngine;
 
 namespace bsgbryan {
 
+  /*
+    This maintains all properties for our waveform. All properties, except those
+    marked [System.NonSerialized] in their type, are serialized to an asset.
+
+    Assets can be shared across instances of WavyMcFormface. Since
+    Envelope.CurrentOctave and Envelope.NoteIndex are not serialized, each
+    instance of WavyMcFormface sharing an asset may play their own notes.
+
+    For info on each property, please see the property's type in the Data Types
+    directory.
+   */
   [System.Serializable]
   public class ConfigieMcWaveface : ScriptableObject {
     public bsgbryan.Volume         Volume         = new bsgbryan.Volume();
@@ -14,11 +25,25 @@ namespace bsgbryan {
   	public bsgbryan.FrequencyLimit FrequencyLimit = new bsgbryan.FrequencyLimit();
     public bsgbryan.WaveTypes      WaveVolumes    = new bsgbryan.WaveTypes();
 
+    /*
+      Unfortunately we can't read AudioSettings.outputSampleRate because audio
+      generation happens on it's own thread and ScriptableObjects cannot call
+      AudioSettings.outputSampleRate outside the main thread, so we have to
+      hardcode this.
+
+      I want to update it so it's platform specific; specifically so that it's
+      properly set to 24000 for mobile. That'll come very soon in an update.
+     */
     public int SampleRate = 48000;
 
     [System.NonSerialized]
     public WavyMcFormface Generator;
 
+    /*
+      The core notes available.
+
+      Caclulating notes in other octaves is done by calling Wave.DetermineOctave().
+     */
     public float[] Notes = new float[12] {
       16.351f, // C
       17.324f, // C# / Db
@@ -34,6 +59,13 @@ namespace bsgbryan {
       30.868f  // B
     };
 
+    /*
+      This isn't currently used for anything, but it's how I originally
+      built up the base Notes array, and I think it's cool, so I keep
+      it around :-)
+
+      Who knows, maybe you'll find some cool way to use it!
+     */
     public float[] Offsets = new float[] {
       0f,     // C
       0.973f, // C# / Db
@@ -49,6 +81,12 @@ namespace bsgbryan {
       1.733f  // B
     };
 
+    /*
+      !!! DO NOT MANIPULATE THIS FIELD DIRECTLY !!!
+      This field is used internally by MavyMcFormface
+      to generate waveforms
+     */
+    [System.NonSerialized]
     public float[] Phases = new float[] {
       0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f
     };
