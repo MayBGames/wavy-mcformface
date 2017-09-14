@@ -1,0 +1,7 @@
+These are the Configie assets which power waveforms.
+
+A Configie can be shared across multiple WavyMcFormface instances. Since the
+PlayControls.CurrentOctave and PlayControls.NoteIndex properties are not saved
+to a Configie asset, different waveforms can play different notes in different
+octaves using the same Harmonics, FrequencyLimit, Volume.Level, WibbleWobble,
+WaveVolumes, and Noise settings.

@@ -1,0 +1,6 @@
+These are the scripts used by the GameObjects in the Game On scene to
+dynamically waveform propertie as runtime. Feel free to look through then and
+experiment by finding different properties to adjust.
+
+For info about what properties are available and how they can be changed, look
+in the Data Types and Scripts folders outside this one.

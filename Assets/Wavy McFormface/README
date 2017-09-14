@@ -1,0 +1,38 @@
+Hello and Welcome to Wavy McFormface!
+
+Thank you so much for buying this plugin. If you have any questions or issues
+please checkout http://bsgbryan.com/wavy-mcformface or post to the unity forums
+for this plugin.
+
+To get started, simply select Tools -> Wavy McFormface -> New Waveform. Once
+you give your waveform a name and select where you'd like the configie asset to
+be saved you'll see a new GameObject added to your scene (with the name you
+chose in the save dialog). This GameObject will have the WavyMcFormface script,
+with the newly-created configie asset attached, as well as an AudioSource. The
+AudioSource is extremely important: without it no sound will be produced.
+
+*NOTE: Each GameObject with an instance of WavyMcFormface attached to it must
+also have an AudioSource attached to it.*
+
+If you select the newly-created GameObject and expand the Wavy Mc Formface
+component you'll see the beautiful custom inspector panel. This panel is used to
+sculpt your waveform.
+
+If you Play the scene, select a "current octave" of 3 or 4 from the Play
+Controls section (just to make sure it's easy to hear) and click "play" for one
+of the notes you'll hear your waveform! This is not a pre-recorded audio file or
+midi sample. This is a waveform generated in real time as you listen!
+
+While the waveform is playing you can use the inspector to adjust the wave's
+properties to customize it until it's exactly what you want. All your updates
+will persist when the scene stops playing.
+
+For more detailed info, please visit http://bsgbryan.com/wavy-mcformface
+
+Now; have fun customizing your wave, check out the Examples directory, and make
+something awesome!
+
+
+
+
+And thanks again for buying Wavy. I really appreciate it.
