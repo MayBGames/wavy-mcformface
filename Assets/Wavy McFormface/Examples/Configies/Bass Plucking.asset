@@ -1,0 +1,219 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 849a5bb521d0940b0b1c6f97103a5221, type: 3}
+  m_Name: Bass Plucking
+  m_EditorClassIdentifier: 
+  Volume:
+    Level: 1
+  PlayControls:
+    ShowProperties: 1
+    LowOctave: 0
+    HighOctave: 4
+  Noise:
+    ShowProperties: 0
+    Enabled: 0
+    Level: 0.25
+    Variance:
+      Min: 0.25
+      Max: 0.75
+    Curve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 2
+        time: 0
+        value: 0.5
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+      - serializedVersion: 2
+        time: 1
+        value: 0.5
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+  WibbleWobble:
+    ShowProperties: 0
+    Enabled: 0
+    Time:
+      Milliseconds: 0
+      Seconds: 0
+      Minutes: 0
+      Hours: 0
+    Curve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 2
+        time: 0
+        value: 0.5
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+      - serializedVersion: 2
+        time: 1
+        value: 0.5
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+  Envelope:
+    ShowProperties: 0
+    Rise:
+      Time: 20
+      Curve:
+        serializedVersion: 2
+        m_Curve:
+        - serializedVersion: 2
+          time: 0
+          value: 0
+          inSlope: 0
+          outSlope: 0
+          tangentMode: 0
+        - serializedVersion: 2
+          time: 1
+          value: 1
+          inSlope: 0
+          outSlope: 0
+          tangentMode: 0
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+    Decay:
+      Time: 100
+      Curve:
+        serializedVersion: 2
+        m_Curve:
+        - serializedVersion: 2
+          time: 0
+          value: 1
+          inSlope: 0
+          outSlope: 0
+          tangentMode: 0
+        - serializedVersion: 2
+          time: 1
+          value: 0
+          inSlope: 0
+          outSlope: 0
+          tangentMode: 0
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+  Harmonics:
+    ShowProperties: 1
+    Enabled: 1
+    UpperCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 2
+        time: 0
+        value: 0.5
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+      - serializedVersion: 2
+        time: 1
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    LowerCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 2
+        time: 0
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+      - serializedVersion: 2
+        time: 1
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 0
+    ShowDetails: 0
+  FrequencyLimit:
+    ShowProperties: 1
+    Enabled: 1
+    Curve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 2
+        time: 0
+        value: 1
+        inSlope: -2.472243
+        outSlope: -2.472243
+        tangentMode: 0
+      - serializedVersion: 2
+        time: 1
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 0
+    ShowDetails: 0
+  WaveVolumes:
+    ShowProperties: 1
+    Selected:
+    - 1
+    - 0
+    - 0
+    - 0
+  SampleRate: 48000
+  Notes:
+  - 16.351
+  - 17.324
+  - 18.354
+  - 19.445
+  - 20.601
+  - 21.827
+  - 23.124
+  - 24.499
+  - 25.956
+  - 27.5
+  - 29.135
+  - 30.868
+  Offsets:
+  - 0
+  - 0.973
+  - 1.03
+  - 1.091
+  - 1.156
+  - 1.226
+  - 1.297
+  - 1.375
+  - 1.457
+  - 1.544
+  - 1.635
+  - 1.733
+  Phases:
+  - 0.272389
+  - 6.0784893
+  - 6.034475
+  - 1.9296067
+  - 2.3027143
+  - 0.25766447
+  - 0.060821056
+  - 0
+  - 0
+  - 0
