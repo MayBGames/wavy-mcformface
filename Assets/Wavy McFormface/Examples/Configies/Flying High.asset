@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Name: Flying High
   m_EditorClassIdentifier: 
   Volume:
-    Level: 0
+    Level: 1
   PlayControls:
     ShowProperties: 1
     LowOctave: 0
@@ -206,14 +206,3 @@ MonoBehaviour:
   - 1.544
   - 1.635
   - 1.733
-  Phases:
-  - 3.9317524
-  - 4.203389
-  - 5.992772
-  - 3.3564703
-  - 0.7327715
-  - 2.0777504
-  - 0
-  - 0
-  - 0
-  - 0

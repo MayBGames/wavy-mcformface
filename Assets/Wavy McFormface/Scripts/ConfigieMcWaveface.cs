@@ -20,21 +20,20 @@ namespace bsgbryan {
   	public bsgbryan.PlayControls   PlayControls   = new bsgbryan.PlayControls();
   	public bsgbryan.Noise          Noise          = new bsgbryan.Noise();
   	public bsgbryan.CurvedTime     WibbleWobble   = new bsgbryan.CurvedTime();
-  	public bsgbryan.Envelope Envelope = new bsgbryan.Envelope();
+  	public bsgbryan.Envelope       Envelope       = new bsgbryan.Envelope();
   	public bsgbryan.Harmonics      Harmonics      = new bsgbryan.Harmonics();
   	public bsgbryan.FrequencyLimit FrequencyLimit = new bsgbryan.FrequencyLimit();
     public bsgbryan.WaveTypes      WaveVolumes    = new bsgbryan.WaveTypes();
 
     /*
-      Unfortunately we can't read AudioSettings.outputSampleRate because audio
-      generation happens on it's own thread and ScriptableObjects cannot call
-      AudioSettings.outputSampleRate outside the main thread, so we have to
-      hardcode this.
-
-      I want to update it so it's platform specific; specifically so that it's
-      properly set to 24000 for mobile. That'll come very soon in an update.
+      Because we can't get access to the sample rate from the audio thread,
+      we have to manually force a different sample rate for mobile
      */
-    public int SampleRate = 48000;
+    #if UNITY_IOS || UNITY_ANDROID || UNITY_TVOS || UNITY_TIZEN
+      public int SampleRate = 24000;
+    #else
+      public int SampleRate = 48000;
+    #endif
 
     [System.NonSerialized]
     public WavyMcFormface Generator;

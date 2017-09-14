@@ -6,9 +6,14 @@ using UnityEngine;
 namespace bsgbryan {
   public class WavyMcFormface : MonoBehaviour {
 
+    [SerializeField]
+    public bsgbryan.ConfigieMcWaveface Configie;
+
     private Wave wave = new Wave();
 
     private int samples_per_second;
+
+    private bool playing = false;
 
     #region Play related properties
       private int   note;
@@ -47,9 +52,6 @@ namespace bsgbryan {
       private bool disruption_is_lerping      = false;
       private bool noise_curve_is_lerping     = false;
     #endregion
-
-    [SerializeField]
-    public bsgbryan.ConfigieMcWaveface Configie;
 
     void Start() {
       samples_per_second    = Configie.SampleRate / 1000;
@@ -100,50 +102,55 @@ namespace bsgbryan {
       //   long started = System.DateTime.Now.Ticks;
       // #endif
 
-      float position  = 0f;
-      float pass      = 0f;
-      float counter   = 0f;
-      bool  d_enable  = Configie.WibbleWobble.Enabled;
-      int   limit     = 0;
-      int   length    = data.Length;
-      float len       = (float) length - 2;
-      float max_count = len / channels;
-
-      if (d_enable == true) {
-        limit = ((data.Length / 2) * Configie.WibbleWobble.Time.Value) / samples_per_second;
-
-        if (passes >= limit) {
-          passes = 0;
-        }
-      }
-
-      rise_lerp_goal = CalculateAttack();
-
-      for (int i = 0; i < length; i += channels) {
-        pass = counter++ / max_count;
+      if (playing == true) {
+        float position  = 0f;
+        float pass      = 0f;
+        float counter   = 0f;
+        bool  d_enable  = Configie.WibbleWobble.Enabled;
+        int   limit     = 0;
+        int   length    = data.Length;
+        float len       = (float) length - 2;
+        float max_count = len / channels;
 
         if (d_enable == true) {
-          position = passes++ / limit;
+          limit = ((data.Length / 2) * Configie.WibbleWobble.Time.Value) / samples_per_second;
+
+          if (passes >= limit) {
+            passes = 0;
+          }
         }
 
-        float rise = SmoothFloatTransition(
-          previous_rise,
-          rise_lerp_goal,
-          pass);
+        rise_lerp_goal = CalculateAttack();
 
-        DoFastLerps();
+        for (int i = 0; i < length; i += channels) {
+          pass = counter++ / max_count;
 
-        data[i] = wave.Evaluate(note, octave, rise, position, pass, Configie);
+          if (d_enable == true) {
+            position = passes++ / limit;
+          }
 
-        if (channels == 2) {
-          data[i + 1] = data[i];
+          float rise = SmoothFloatTransition(
+            previous_rise,
+            rise_lerp_goal,
+            pass);
+
+          DoFastLerps();
+
+          data[i] = wave.Evaluate(note, octave, rise, position, pass, Configie);
+
+          if (channels == 2) {
+            data[i + 1] = data[i];
+          }
+        }
+
+        DoSlowLerps();
+
+        previous_rise = rise_lerp_goal;
+
+        if (previous_rise == 0f) {
+          playing = false;
         }
       }
-
-      DoSlowLerps();
-
-      previous_rise = rise_lerp_goal;
-
       // #if UNITY_EDITOR
       //   long finish = System.DateTime.Now.Ticks;
       //
@@ -398,6 +405,8 @@ namespace bsgbryan {
       hit     = System.DateTime.Now.Ticks;
       note    = n;
       octave  = (float) o;
+
+      playing = true;
     }
 
     /*

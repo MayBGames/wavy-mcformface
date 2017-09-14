@@ -14,6 +14,9 @@ AudioSource is extremely important: without it no sound will be produced.
 *NOTE: Each GameObject with an instance of WavyMcFormface attached to it must
 also have an AudioSource attached to it.*
 
+*ALSO NOTE: You'll need the Standard Assets package in your project or you'll
+get compile errors from the Game On example scene*
+
 If you select the newly-created GameObject and expand the Wavy Mc Formface
 component you'll see the beautiful custom inspector panel. This panel is used to
 sculpt your waveform.
