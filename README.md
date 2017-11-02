@@ -67,4 +67,73 @@ There are several sections of the editor ui, each with their own purpose. The fo
 
 ## Configie and Master Volume
 
-![Configie and Master Volume editor ui section](/Screenshots/Configie and Master Volume.png?raw=true "Configie and Master Volume editor ui section")
+![Configie and Master Volume editor ui section](/Screenshots/Configie%20and%20Master%20Volume.png?raw=true "Configie and Master Volume editor ui section")
+
+The top-most section is there you specify which Configie a script is using, and set the master volume.
+
+To change which Configie a script uses, simply select a different one from the component chooser.
+
+Wavy McFormface supports all four basic wave types:
+
+* Sine
+* Sawtooth
+* Square
+* Triangle
+
+The volume level for each wave type can be specified individually. The Master Volume raises or lowers all wave type volumes uniformly, and can be used as a cutoff to make sure the overall volume output nevers get beyond a desired threshold.
+
+The Master Volume slider adjusts all wave type volumes equally.
+
+_**IMPORTANT NOTE**_ The editor ui enforces a range of 0.0 - 1.0 for the value of the Master Volume. The api, because of the way Unity works, does not. **Do not ever specify a Master Volume level above 1.0** as doing so may cause damage to your audio equipment and/or your ears. This is extrmeely serious.
+
+## Wave Volumes
+
+![Wave Volumes editor ui section](/Screenshots/Wave%20Volumes.png?raw=true "Wave Volumes editor ui section")
+
+**These values may be updated in real time while in Play Mode**
+
+This section allows you specify volume levels for all four wave types independently - play around with these to create something awesome and unique!
+
+_**IMPORTANT NOTE**_ The editor ui enforces a range of 0.0 - 1.0 for each of these values. The api, because of the way Unity works, does not. **Do not ever specify a vame volume level above 1.0** as doing so may cause damage to your audio equipment and/or your ears. This is extrmeely serious.
+
+## Play Controls
+
+![Play Controls editor ui section](/Screenshots/Play%20Controls.png?raw=true "Play Controls editor ui section")
+
+This section looks complex, but it's really three things:
+
+1. The octave range specifier
+2. The current octave slider
+3. The note grid
+
+We'll go through each item in turn:
+
+### octave range
+
+**This value may be updated in real time while in Play Mode**
+
+The octave range specifies all octaves to render when Harmonics are active.
+
+Wavy can generate a pure tone (a single note in a single octave) or it can generate multiple tones that play at once. Generating multiple tones at once typically sounds more natural and pleasent. Wavy gives you the freedom to select the range of octaves to render for Harmonics - giving you tremendous power to shape the sound and texture of your waveform.
+
+If Harmonics are not active this value is not used.
+
+### current octave
+
+**This value may be updated in real time while in Play Mode**
+
+This slider selects the octave to use when generating your waveform. It is bounded by the values selected in the octave range.
+
+### note grid
+
+The note grid is a collection of buttons allowing you to play your waveform and see how it sounds.
+
+#### tap
+
+The `tap` buttons roughly simulate tapping a key on a keyboard to play your waveform. The formula used to determine how long to play a note when tapping is as follows: `attack + attack`. The note is played for twice the attack time - this provides enough time forthe note to get to full volume, with a sustain equal to the attack time. When `attack + attack` time has passed, the note stops playing and the decay takes over. The note volume fades out according to the decay time and `AnimationCurve` specified.
+
+### play
+
+The `play` buttons simulate pressing and holding a key on a keyboard to play your waveform. The `attack` time and `AnimationCurve` are used to get the note to full volume. The note then continues playing until `stop` is pressed. When `stop` is pressed the `decay` time and `AnimationCurve` are used to lower the note's volume to 0.
+
+_**IMPORTANT NOTE**_ Only one note can play at a time. Pressing `play` on multiple notes will simple transition from the first note to the second - even though both buttons will say `stop`, only the most recent note select will be playing.
