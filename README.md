@@ -53,23 +53,27 @@ Since the scene needs to be in Play Mode for Wavy to generate waveforms we reall
 
 ### Scripts
 
-Scripts are the logic that that uses a Configie to generate a a waveform. Scripts get attached to `GameObjects` and require an `Audio Source` also be attached to the same `GameObject` as the script.
+Scripts are the logic that that uses a Configie to generate a waveform. Scripts get attached to `GameObjects` and require an `Audio Source` also be attached to the same `GameObject` as the script.
 
 A script references a Configie (as is shown in the Configie and Master Volume section below).
 
 Importantly, you can edit a Configie either by editing the asset directly, or by using the script - both editors do the same thing. Most of the time you'll likely use the script editor ui to edit the Configie while in Play Mode.
 
-It's important to node that you can have multiple scripts reference the same Configie. In this case, a change made via the script editor ui will effect all script instances referencing the same Configie.
+It's important to note that you can have multiple scripts reference the same Configie. In this case, a change made via the script editor ui will effect all script instances referencing the same Configie.
 
 # The Editor ui
 
-There are several sections of the editor ui, each with their own purpose. The following sections will go through each section in turn.
+There are several sections of the editor ui, each with their own purpose. Below we go through each section in turn.
 
 ## Configie and Master Volume
 
 ![Configie and Master Volume editor ui section](/Screenshots/Configie%20and%20Master%20Volume.png?raw=true "Configie and Master Volume editor ui section")
 
-The top-most section is there you specify which Configie a script is using, and set the master volume.
+**Configie _may not_ be updated in real time while in Play Mode**
+
+**Master Volume _may_ be updated in real time while in Play Mode**
+
+The top-most section is where you specify which Configie a script is using, and set the Master Volume.
 
 To change which Configie a script uses, simply select a different one from the component chooser.
 
@@ -82,15 +86,13 @@ Wavy McFormface supports all four basic wave types:
 
 The volume level for each wave type can be specified individually. The Master Volume raises or lowers all wave type volumes uniformly, and can be used as a cutoff to make sure the overall volume output nevers get beyond a desired threshold.
 
-The Master Volume slider adjusts all wave type volumes equally.
-
 _**IMPORTANT NOTE**_ The editor ui enforces a range of 0.0 - 1.0 for the value of the Master Volume. The api, because of the way Unity works, does not. **Do not ever specify a Master Volume level above 1.0** as doing so may cause damage to your audio equipment and/or your ears. This is extrmeely serious.
 
 ## Wave Volumes
 
 ![Wave Volumes editor ui section](/Screenshots/Wave%20Volumes.png?raw=true "Wave Volumes editor ui section")
 
-**These values may be updated in real time while in Play Mode**
+**These values _may_ be updated in real time while in Play Mode**
 
 This section allows you specify volume levels for all four wave types independently - play around with these to create something awesome and unique!
 
@@ -100,7 +102,7 @@ _**IMPORTANT NOTE**_ The editor ui enforces a range of 0.0 - 1.0 for each of the
 
 ![Play Controls editor ui section](/Screenshots/Play%20Controls.png?raw=true "Play Controls editor ui section")
 
-This section looks complex, but it's really three things:
+This section looks complex, but it's really just three things:
 
 1. The octave range specifier
 2. The current octave slider
@@ -110,30 +112,58 @@ We'll go through each item in turn:
 
 ### octave range
 
-**This value may be updated in real time while in Play Mode**
+**This value _may_ be updated in real time while in Play Mode**
 
 The octave range specifies all octaves to render when Harmonics are active.
 
-Wavy can generate a pure tone (a single note in a single octave) or it can generate multiple tones that play at once. Generating multiple tones at once typically sounds more natural and pleasent. Wavy gives you the freedom to select the range of octaves to render for Harmonics - giving you tremendous power to shape the sound and texture of your waveform.
+Wavy can generate a pure tone (a single note in a single octave) or it can generate multiple tones that play at once. Generating multiple tones that play at once typically sounds more natural and pleasent. Wavy gives you the freedom to select the range of octaves to render for Harmonics - giving you tremendous power to shape the sound and texture of your waveform.
 
-If Harmonics are not active this value is not used.
+_If Harmonics are not active this value is not used._
 
 ### current octave
 
-**This value may be updated in real time while in Play Mode**
+**This value _may_ be updated in real time while in Play Mode**
 
 This slider selects the octave to use when generating your waveform. It is bounded by the values selected in the octave range.
 
 ### note grid
 
-The note grid is a collection of buttons allowing you to play your waveform and see how it sounds.
+The note grid is a collection of buttons allowing you to play your waveform to see how it sounds.
 
 #### tap
 
-The `tap` buttons roughly simulate tapping a key on a keyboard to play your waveform. The formula used to determine how long to play a note when tapping is as follows: `attack + attack`. The note is played for twice the attack time - this provides enough time forthe note to get to full volume, with a sustain equal to the attack time. When `attack + attack` time has passed, the note stops playing and the decay takes over. The note volume fades out according to the decay time and `AnimationCurve` specified.
+The `tap` buttons roughly simulate tapping a key on a keyboard to play your waveform. The formula used to determine how long to play when tapping is as follows: `attack + attack`. The note is played for twice the attack time - this provides enough time for the note to get to full volume, with a sustain equal to the attack time. When `attack + attack` time has passed, the note stops playing and the `decay` takes over. The note volume fades out according to the `decay` time and `AnimationCurve` specified.
 
 ### play
 
-The `play` buttons simulate pressing and holding a key on a keyboard to play your waveform. The `attack` time and `AnimationCurve` are used to get the note to full volume. The note then continues playing until `stop` is pressed. When `stop` is pressed the `decay` time and `AnimationCurve` are used to lower the note's volume to 0.
+The `play` buttons simulates pressing and holding a key on a keyboard to play your waveform. The `attack` time and `AnimationCurve` are used to get the waveform to full volume. The waveform then continues playing until `stop` is pressed. When `stop` is pressed the `decay` time and `AnimationCurve` are used to lower the waveform's volume to 0.
 
-_**IMPORTANT NOTE**_ Only one note can play at a time. Pressing `play` on multiple notes will simple transition from the first note to the second - even though both buttons will say `stop`, only the most recent note select will be playing.
+_**IMPORTANT NOTE**_ Only one note can play at a time. Pressing `play` on multiple notes will simply transition from the first note to the second - even though both buttons will say `stop`, only the most recent note selected will be playing.
+
+## Envelope
+
+![Envelope editor ui section](/Screenshots/Envelope.png?raw=true "Envelope editor ui section")
+
+**attack/decay AnimationCurves _may_ be updated in real time while in Play Mode**
+
+**attack/decay time values _may not_ be updated in real time while in Play Mode**
+
+### time values
+
+The `attack` and `decay` time values specify how long their associated actions take to complete. Because of the way the waveform is generated at runtime, these values may not be edited while in Play Mode.
+
+### AnimationCurves
+
+The `attack` and `decay` AnimationCurves give you absolute control over exactly _how_ a waveform's volume raises and lowers over the time specified. The AnimationCurves may be edited in real time while in Play Mode - however, changes to `attack` will not be heard until the next `play` and changes to `decay` will only be heard when `stop` is pressed.
+
+## Harmonics
+
+![Harmonics editor ui section](/Screenshots/Harmonics.png?raw=true "Harmonics editor ui section")
+
+**These values _may_ be updated in real time while in Play Mode**
+
+The Harmonics AnimationCurves allow you to specify how loud harmonic octaves should be relative to the current octave.
+
+The Details section provides info on the volume level for each octave below and above the current octave.
+
+The grey bars behind the AnimationCurves show you where each octave is at - making it easy to visally get an idea how loud each octave is.
