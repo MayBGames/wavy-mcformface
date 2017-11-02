@@ -96,7 +96,7 @@ _**IMPORTANT NOTE**_ The editor ui enforces a range of 0.0 - 1.0 for the value o
 
 This section allows you specify volume levels for all four wave types independently - play around with these to create something awesome and unique!
 
-_**IMPORTANT NOTE**_ The editor ui enforces a range of 0.0 - 1.0 for each of these values. The api, because of the way Unity works, does not. **Do not ever specify a vame volume level above 1.0** as doing so may cause damage to your audio equipment and/or your ears. This is extrmeely serious.
+_**IMPORTANT NOTE**_ The editor ui enforces a range of 0.0 - 1.0 for each of these values. The api, because of the way Unity works, does not. **Do not ever specify a wave volume level above 1.0** as doing so may cause damage to your audio equipment and/or your ears. This is extrmeely serious.
 
 ## Play Controls
 
@@ -158,12 +158,16 @@ The `attack` and `decay` AnimationCurves give you absolute control over exactly 
 
 ## Harmonics
 
-![Harmonics editor ui section](/Screenshots/Harmonics.png?raw=true "Harmonics editor ui section")
+![Harmonics without details editor ui section](/Screenshots/Harmonics%20no%20details.png?raw=true "Harmonics without details editor ui section")
 
 **These values _may_ be updated in real time while in Play Mode**
 
 The Harmonics AnimationCurves allow you to specify how loud harmonic octaves should be relative to the current octave.
 
-The Details section provides info on the volume level for each octave below and above the current octave.
-
 The grey bars behind the AnimationCurves show you where each octave is at - making it easy to visally get an idea how loud each octave is.
+
+### Hamronic details
+
+![Harmonics showing details editor ui section](/Screenshots/Harmonics%20with%20details.png?raw=true "Harmonics showing details editor ui section")
+
+The Details section provides info on the volume level for each octave below and above the current octave.
