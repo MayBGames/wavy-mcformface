@@ -67,4 +67,4 @@ There are several sections of the editor ui, each with their own purpose. The fo
 
 ## Configie and Master Volume
 
-![Configie and Master Volume editor ui section](/Screenshots/Configie and Master Volume.png?raw=true "Configie and Master Volume editor ui section")
+![Configie and Master Volume editor ui section]("/Screenshots/Configie and Master Volume.png?raw=true" "Configie and Master Volume editor ui section")
