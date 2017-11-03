@@ -186,6 +186,6 @@ The grey bars behind the AnimationCurve show you where each rendered octave is a
 
 Using the AnimationCurve you can control the volumes of every octave and note rendered in your waveform to a high degree of precision.
 
-![Frequency Limit showing details editor ui section](/Screenshots/Frequency%20Limit%with%20details.png?raw=true "Frequency Limit showing details editor ui section")
+![Frequency Limit showing details editor ui section](/Screenshots/Frequency%20Limit%20with%20details.png?raw=true "Frequency Limit showing details editor ui section")
 
 The Frequency Limit details shows the exact volume level of each rendered octave relative to the current octave.
