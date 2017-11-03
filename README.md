@@ -141,7 +141,7 @@ _**IMPORTANT NOTE**_ The editor ui enforces a range of 0.0 - 1.0 for the value o
 
 This section allows you specify volume levels for all four wave types independently - play around with these to create something awesome and unique!
 
-_**IMPORTANT NOTE**_ The editor ui enforces a range of 0.0 - 1.0 for each of these values. The api, because of the way Unity works, does not. **Do not ever specify a wave volume level above 1.0** as doing so may cause damage to your audio equipment and/or your ears. This is extrmeely serious.
+_**IMPORTANT NOTE**_ The editor ui enforces a range of 0.0 - 1.0 for each of these values. The api, because of the way Unity works, does not. **Do not ever specify a wave volume level above 1.0** as doing so may cause damage to your audio equipment and/or your ears. This is extremely serious.
 
 ## Play Controls
 
@@ -199,7 +199,7 @@ The `attack` and `decay` time values specify how long their associated actions t
 
 ### AnimationCurves
 
-The `attack` and `decay` AnimationCurves give you absolute control over exactly _how_ a waveform's volume raises and lowers over the time specified. The AnimationCurves may be edited in real time while in Play Mode - however, changes to `attack` will not be heard until the next `play` and changes to `decay` will only be heard when `stop` is pressed.
+The `attack` and `decay` AnimationCurves give you absolute control over exactly _how_ a waveform's volume raises and lowers over the time specified. The AnimationCurves may be edited in real time while in Play Mode - however, changes to `attack` will not be heard until the next `play` and changes to `decay` will only be heard until `stop` is pressed.
 
 ## Harmonics
 
@@ -209,9 +209,9 @@ The `attack` and `decay` AnimationCurves give you absolute control over exactly 
 
 The Harmonics AnimationCurves allow you to specify how loud harmonic octaves should be relative to the current octave.
 
-The grey bars behind the AnimationCurves show you where each rendered octave is at - making it easy to visally get an idea how loud each octave is.
+The grey bars behind the AnimationCurves show you where each rendered octave is at - making it easy to visually get an idea how loud each octave is.
 
-### Hamronic details
+### Harmonic details
 
 ![Harmonics showing details editor ui section](/Screenshots/Harmonics%20with%20details.png?raw=true "Harmonics showing details editor ui section")
 
@@ -227,7 +227,7 @@ _**IMPORTANT NOTE**_ The volume range for harmonic octaves is bounded to 0.0 - 1
 
 The Frequency Limit curve is like an advanced volume control for all rendered frequencies of your waveform.
 
-The grey bars behind the AnimationCurve show you where each rendered octave is at - making it easy to visally get an idea how loud each octave is.
+The grey bars behind the AnimationCurve show you where each rendered octave is at - making it easy to visually get an idea how loud each octave is.
 
 Using the AnimationCurve you can control the volumes of every octave and note rendered in your waveform to a high degree of precision.
 
@@ -243,7 +243,7 @@ This one is fun :metal:
 
 ![Wibble Wobble editor ui section](/Screenshots/Wibble%20Wobble.png?raw=true "Wibble Wobble editor ui section")
 
-The official name for this control in synth parlance is Pitch Bending, or portamento (usually using a [Pitch Wheel(https://en.wikipedia.org/wiki/Pitch_wheel "Wikipedia page")) - but I didn't know that when I was building this plugin so I called it Wibble Wobble (which is more fun anyway).
+The official name for this control in synth parlance is Pitch Bending, or portamento (usually using a [Pitch Wheel](https://en.wikipedia.org/wiki/Pitch_wheel "Wikipedia page")) - but I didn't know that when I was building this plugin so I called it Wibble Wobble (_which is more fun anyway_).
 
 The Wibble Wibble uses an AnimationCurve to specify how to bend you're waveform's pitch. The bend pattern repeats according the the `Time` units specified.
 
@@ -279,7 +279,7 @@ Additionally, you can control the tone of the `variance` by sliding the range up
 
 # api
 
-All properties available through the editor ui are also available via the api. For examples of api use, please see the `Assets/Wavy McFormface/Examples` directory (specifically the [Scripts](/Assets/Wavy%20McFormface/Examples/Scripts) directory). These scenes are playable. To run them you will need the [Standard Assets](https://assetstore.unity.com/packages/essentials/asset-packs/standard-assets-32351) package installed.
+All properties available through the editor ui are also available via the api. For examples of api use, please see the `Assets/Wavy McFormface/Examples` directory (_specifically the [Scripts](/Assets/Wavy%20McFormface/Examples/Scripts) directory_). These scenes are playable. To run them you will need the [Standard Assets](https://assetstore.unity.com/packages/essentials/asset-packs/standard-assets-32351) package installed.
 
 ## Lerping
 
@@ -290,4 +290,4 @@ There are two different speeds that Wavy lerps at when animating between propert
 
 All AnimationCurve properties lerp at the slow speed. This is to prevent audio artifacts like popping - which are caused by changing values too quickly.
 
-All animatiable non-AnimationCurve properties lerp at the fast speed. This is because changes in these values can be animated faster without causing artifacts.
+Float properties lerp at the fast speed. This is because changes in these values can be animated faster without causing artifacts.
