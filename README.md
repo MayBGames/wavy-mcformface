@@ -198,9 +198,9 @@ This one is fun :metal:
 
 ![Wibble Wobble editor ui section](/Screenshots/Wibble%20Wobble.png?raw=true "Wibble Wobble editor ui section")
 
-The official name for this control in synth parlance is [Pitch Shift](https://en.wikipedia.org/wiki/Pitch_shift "Wikipedia page") - but I didn't know that when I was building this plugin so I called it Wibble Wobble (which is more fun anyway).
+The official name for this control in synth parlance is Pitch Bending, or portamento (usually using a [Pitch Wheel(https://en.wikipedia.org/wiki/Pitch_wheel "Wikipedia page")) - but I didn't know that when I was building this plugin so I called it Wibble Wobble (which is more fun anyway).
 
-The wibble Wibble uses the AnimationCurve to specify how to bend you're waveform's pitch. The bend pattern repeats according the the time units specified.
+The Wibble Wibble uses an AnimationCurve to specify how to bend you're waveform's pitch. The bend pattern repeats according the the `Time` units specified.
 
 ## Noise
 
@@ -218,15 +218,15 @@ We'll go through each part in reservse order as that will make more sense:
 
 #### pattern
 
-This AnimationCurve defined the noise pattern for waveform sample. This `pattern` will repeat for each call to `OnAudioFilterRead`. While this `pattern` does give shape and texture to your waveform, it is not the same as the Wibble Wobble pattern. This `pattern` is for providing suble texture changes and nuances in your waveform.
+This AnimationCurve defines the pattern by which a waveform should deviate from it's note over the course of a sample. This `pattern` will repeat for each call to `OnAudioFilterRead` (ie: _sample_). While this `pattern` does give shape and texture to your waveform, it is not the same as the Wibble Wobble pattern. This `pattern` is for providing suble texture changes and nuances in your waveform.
 
 #### level
 
-The `level` determines to what extent the `pattern` and `variance` distort the waveform. A value of 0 means the `pattern` and `variance` do not distort the waveform at all. As the `level` value increases `pattern` and `variance` distort the waveform to a greater extent.
+The `level` determines to what extent the `pattern` and `variance` distort the waveform. A value of 0 means the no distortion occurs. As the value increases, the waveform distortion becomes more intense.
 
 #### variance
 
-This range defines how far noise may deviate from the specified `pattern`. The "noise" provided by this control is a function of random deviations from the specified `pattern`, amplified by `level`.
+This range defines how far randomized noise points may deviate from the specified `pattern`. The "noise" provided by this control is a function of random deviations from the specified `pattern`, amplified by `level`.
 
 A narrow `variance` range means the injected noise will only deviate slightly from the specified `pattern`. A wide `variance` means that more random noise deviations will be applied to the waveform as they will fall within the specified `varaince` range.
 
