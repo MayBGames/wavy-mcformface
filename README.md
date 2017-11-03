@@ -67,6 +67,10 @@ There are several sections of the editor ui, each with their own purpose. Below 
 
 ## Overview
 
+Before diving into the details of each section, we'll cover some basics
+
+### Property types
+
 Wavy McFormface has five types of properties:
 
 * AnimationCurve
@@ -75,7 +79,7 @@ Wavy McFormface has five types of properties:
 * Range
 * Time
 
-AnimationCurve, Float, Range, and Integer property types may be edited in real time while in Play Mode. Time properties may not be edited in real time in Play Mode.
+AnimationCurve, Float, Range, and Integer property types may be edited in real time while in Play Mode. Time properties may not be edited from Play Mode.
 
 AnimationCurve properites are:
 
@@ -100,7 +104,11 @@ The two Range properties are:
 * Play Controls octave range
 * Noise variance
 
-The Envelope attack/decat times as well as the Wibble Wobble Time fields are all Time values and may not be edited in real time while in Play Mode.
+The Envelope attack/decay times as well as the Wibble Wobble Time fields are all Time values and may not be edited in real time while in Play Mode.
+
+### Enable/Disable
+
+Any section with a checkbox (Hamronics, Frequency Limit, Wibble Wobble, and Noise) may be enabled or disabled. You can enable/disable while in Play Mode.
 
 ## Configie and Master Volume
 
@@ -123,7 +131,7 @@ Wavy McFormface supports all four basic wave types:
 
 The volume level for each wave type can be specified individually. The Master Volume raises or lowers all wave type volumes uniformly, and can be used as a cutoff to make sure the overall volume output nevers get beyond a desired threshold.
 
-_**IMPORTANT NOTE**_ The editor ui enforces a range of 0.0 - 1.0 for the value of the Master Volume. The api, because of the way Unity works, does not. **Do not ever specify a Master Volume level above 1.0** as doing so may cause damage to your audio equipment and/or your ears. This is extrmeely serious.
+_**IMPORTANT NOTE**_ The editor ui enforces a range of 0.0 - 1.0 for the value of the Master Volume. The api, because of the way Unity works, does not. **Do not ever specify a Master Volume level above 1.0** as doing so may cause damage to your audio equipment and/or your ears. This is extremely serious.
 
 ## Wave Volumes
 
