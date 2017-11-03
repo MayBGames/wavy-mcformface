@@ -245,4 +245,4 @@ There are two different speeds that Wavy lerps at when animating between propert
 
 All AnimationCurve properties lerp at the slow speed. This is to prevent audio artifacts like popping - which are caused by changing values too quickly.
 
-All animatiable non-AnimationCurve properties lerp at the fast speed. This is because changes in these values values an be animated faster without causing artifacts.
+All animatiable non-AnimationCurve properties lerp at the fast speed. This is because changes in these values can be animated faster without causing artifacts.
