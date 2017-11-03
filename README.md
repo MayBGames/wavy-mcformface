@@ -6,13 +6,13 @@ I'm Wavy McFormface, and I'm here to help you make awesome procedural sounds and
 
 Wavy McFormface is an analog synth that allows to to create and waveforms in real time.
 
-Wavy offers a wealth of controls to edit and constomize your waveform. And, as if that weren't enough, you can also edit your waveform at runtime using Wavy's api!
+Wavy offers a wealth of controls to edit and constomize your waveform. And, as if that weren't enough, you can also edit your waveform at runtime using Wavy's API!
 
-Below we'll step through the install process, how to create a waveform, the parts of a waveform, and how to use the editor ui and api to edit/modify your waveform.
+Below we'll step through the install process, how to create a waveform, the parts of a waveform, and how to use the editor UI and API to edit/modify your waveform.
 
 # Install Wavy
 
-This is pretty simple - all you need is the `Wavy McFormface/Assets/Wavy McFormface` directory at the root of your project. I realize the directory structure is weird - it's required by Unity. The most important directory in this entire project is the `Editor` directory. The `Editor` directory is special; Unity looks inside it for ui widgets and such. One pattern you could use to get Wavy ready to go is:
+This is pretty simple - all you need is the `Wavy McFormface/Assets/Wavy McFormface` directory at the root of your project. I realize the directory structure is weird - it's required by Unity. The most important directory in this entire project is the `Editor` directory. The `Editor` directory is special; Unity looks inside it for UI widgets and such. One pattern you could use to get Wavy ready to go is:
 
 ```
 git clone git@github.com:bsgbryan/wavy-mcformface.git # Clones project to ./wavy-mcformface
@@ -46,9 +46,9 @@ What is the difference between a script and an asset?
 
 ### Assets
 
-Wavy McFormface assets are called Configies and hold all the configuration data for a waveform. All the edits and update you make via the editor ui or api are maintained in the Configie.
+Wavy McFormface assets are called Configies and hold all the configuration data for a waveform. All the edits and update you make via the editor UI or API are maintained in the Configie.
 
-Why? Because assets are not scene specific and changes to them persist during Play Mode. This is important because your scene has to be playing for the `OnAudioFilterRead` Unity api method to be called. The `OnAudioFilterRead` method is the hook Wavy uses to generate waveforms. You can read about `OnAudioFilterRead` [here](https://docs.unity3d.com/ScriptReference/MonoBehaviour.OnAudioFilterRead.html "Unity Documentation").
+Why? Because assets are not scene specific and changes to them persist during Play Mode. This is important because your scene has to be playing for the `OnAudioFilterRead` Unity API method to be called. The `OnAudioFilterRead` method is the hook Wavy uses to generate waveforms. You can read about `OnAudioFilterRead` [here](https://docs.unity3d.com/ScriptReference/MonoBehaviour.OnAudioFilterRead.html "Unity Documentation").
 
 Since the scene needs to be in Play Mode for Wavy to generate waveforms we really need to our edits to waveform Configies to persist beyond Play Mode. Assets are the best way to achieve this. Since an asset exists outside a scene it gets updated whether Unity is in Play Mode or not. Using assets for Configies means that you can enter Play Mode and get your waveform sounding exactly the say you want. When you exit Play Mode all your work will persist because it was saved against the Configie - not the GameObject the script is attached to.
 
@@ -58,13 +58,13 @@ Scripts are the logic that that uses a Configie to generate a waveform. Scripts 
 
 A script references a Configie (as is shown in the Configie and Master Volume section below).
 
-Importantly, you can edit a Configie either by editing the asset directly, or by using the script - both editors do the same thing. Most of the time you'll likely use the script editor ui to edit the Configie while in Play Mode.
+Importantly, you can edit a Configie either by editing the asset directly, or by using the script - both editors do the same thing. Most of the time you'll likely use the script editor UI to edit the Configie while in Play Mode.
 
-It's important to note that you can have multiple scripts reference the same Configie. In this case, a change made via the script editor ui will effect all script instances referencing the same Configie.
+It's important to note that you can have multiple scripts reference the same Configie. In this case, a change made via the script editor UI will effect all script instances referencing the same Configie.
 
-# The Editor ui
+# The Editor UI
 
-There are several sections of the editor ui, each with their own purpose. Below we go through each section in turn.
+There are several sections of the editor UI, each with their own purpose. Below we go through each section in turn.
 
 ## Overview
 
@@ -113,7 +113,7 @@ Any section with a checkbox (Hamronics, Frequency Limit, Wibble Wobble, and Nois
 
 ## Configie and Master Volume
 
-![Configie and Master Volume editor ui section](/Screenshots/Configie%20and%20Master%20Volume.png?raw=true "Configie and Master Volume editor ui section")
+![Configie and Master Volume editor UI section](/Screenshots/Configie%20and%20Master%20Volume.png?raw=true "Configie and Master Volume editor UI section")
 
 **Configie _may not_ be updated in real time while in Play Mode**
 
@@ -132,21 +132,21 @@ Wavy McFormface supports all four basic wave types:
 
 The volume level for each wave type can be specified individually. The Master Volume raises or lowers all wave type volumes uniformly, and can be used as a cutoff to make sure the overall volume output nevers get beyond a desired threshold.
 
-_**IMPORTANT NOTE**_ The editor ui enforces a range of 0.0 - 1.0 for the value of the Master Volume. The api, because of the way Unity works, does not. **Do not ever specify a Master Volume level above 1.0** as doing so may cause damage to your audio equipment and/or your ears. This is extremely serious.
+_**IMPORTANT NOTE**_ The editor UI enforces a range of 0.0 - 1.0 for the value of the Master Volume. The API, because of the way Unity works, does not. **Do not ever specify a Master Volume level above 1.0** as doing so may cause damage to your audio equipment and/or your ears. This is extremely serious.
 
 ## Wave Volumes
 
-![Wave Volumes editor ui section](/Screenshots/Wave%20Volumes.png?raw=true "Wave Volumes editor ui section")
+![Wave Volumes editor UI section](/Screenshots/Wave%20Volumes.png?raw=true "Wave Volumes editor UI section")
 
 **These values _may_ be updated in real time while in Play Mode**
 
 This section allows you specify volume levels for all four wave types independently - play around with these to create something awesome and unique!
 
-_**IMPORTANT NOTE**_ The editor ui enforces a range of 0.0 - 1.0 for each of these values. The api, because of the way Unity works, does not. **Do not ever specify a wave volume level above 1.0** as doing so may cause damage to your audio equipment and/or your ears. This is extremely serious.
+_**IMPORTANT NOTE**_ The editor UI enforces a range of 0.0 - 1.0 for each of these values. The API, because of the way Unity works, does not. **Do not ever specify a wave volume level above 1.0** as doing so may cause damage to your audio equipment and/or your ears. This is extremely serious.
 
 ## Play Controls
 
-![Play Controls editor ui section](/Screenshots/Play%20Controls.png?raw=true "Play Controls editor ui section")
+![Play Controls editor UI section](/Screenshots/Play%20Controls.png?raw=true "Play Controls editor UI section")
 
 This section looks complex, but it's really just three things:
 
@@ -188,7 +188,7 @@ _**IMPORTANT NOTE**_ Only one note can play at a time. Pressing `play` on multip
 
 ## Envelope
 
-![Envelope editor ui section](/Screenshots/Envelope.png?raw=true "Envelope editor ui section")
+![Envelope editor UI section](/Screenshots/Envelope.png?raw=true "Envelope editor UI section")
 
 **attack/decay AnimationCurves _may_ be updated in real time while in Play Mode**
 
@@ -204,7 +204,7 @@ The `attack` and `decay` AnimationCurves give you absolute control over exactly 
 
 ## Harmonics
 
-![Harmonics without details editor ui section](/Screenshots/Harmonics%20no%20details.png?raw=true "Harmonics without details editor ui section")
+![Harmonics without details editor UI section](/Screenshots/Harmonics%20no%20details.png?raw=true "Harmonics without details editor UI section")
 
 **These values _may_ be updated in real time while in Play Mode**
 
@@ -214,15 +214,15 @@ The grey bars behind the AnimationCurves show you where each rendered octave is 
 
 ### Harmonic details
 
-![Harmonics showing details editor ui section](/Screenshots/Harmonics%20with%20details.png?raw=true "Harmonics showing details editor ui section")
+![Harmonics showing details editor UI section](/Screenshots/Harmonics%20with%20details.png?raw=true "Harmonics showing details editor UI section")
 
 The Details section provides info on the volume level for each octave below and above the current octave.
 
-_**IMPORTANT NOTE**_ The volume range for harmonic octaves is bounded to 0.0 - 1.0. Since harmonic volumes are just AnimationCurves, this can be changed via the api. **Do not change the default volume bounds for harmonic octaves. Doing so may damage your audio equipliment and damage your ears.**
+_**IMPORTANT NOTE**_ The volume range for harmonic octaves is bounded to 0.0 - 1.0. Since harmonic volumes are just AnimationCurves, this can be changed via the API. **Do not change the default volume bounds for harmonic octaves. Doing so may damage your audio equipliment and damage your ears.**
 
 ## Frequency Limit
 
-![Frequency Limit without details editor ui section](/Screenshots/Frequency%20Limit%20no%20details.png?raw=true "Frequency Limit without details editor ui section")
+![Frequency Limit without details editor UI section](/Screenshots/Frequency%20Limit%20no%20details.png?raw=true "Frequency Limit without details editor UI section")
 
 **This AnimationCurve _may_ be updated in real time while in Play Mode**
 
@@ -232,7 +232,7 @@ The grey bars behind the AnimationCurve show you where each rendered octave is a
 
 Using the AnimationCurve you can control the volumes of every octave and note rendered in your waveform to a high degree of precision.
 
-![Frequency Limit showing details editor ui section](/Screenshots/Frequency%20Limit%20with%20details.png?raw=true "Frequency Limit showing details editor ui section")
+![Frequency Limit showing details editor UI section](/Screenshots/Frequency%20Limit%20with%20details.png?raw=true "Frequency Limit showing details editor UI section")
 
 The Frequency Limit details shows the exact volume level of each rendered octave.
 
@@ -242,7 +242,7 @@ The volume range is between 0.0 (_completely silent_) and 1.0 (_full volume_).
 
 This one is fun :metal:
 
-![Wibble Wobble editor ui section](/Screenshots/Wibble%20Wobble.png?raw=true "Wibble Wobble editor ui section")
+![Wibble Wobble editor UI section](/Screenshots/Wibble%20Wobble.png?raw=true "Wibble Wobble editor UI section")
 
 The official name for this control in synth parlance is Pitch Bending, or portamento (usually using a [Pitch Wheel](https://en.wikipedia.org/wiki/Pitch_wheel "Wikipedia page")) - but I didn't know that when I was building this plugin so I called it Wibble Wobble (_which is more fun anyway_).
 
@@ -252,7 +252,7 @@ The Wibble Wibble uses an AnimationCurve to specify how to bend you're waveform'
 
 Ok... this one's a doozy :grin:
 
-![Noise editor ui section](/Screenshots/Noise.png?raw=true "Noise editor ui section")
+![Noise editor UI section](/Screenshots/Noise.png?raw=true "Noise editor UI section")
 
 The Noise section has three parts:
 
@@ -278,9 +278,9 @@ A narrow `variance` range means the injected noise will only deviate slightly fr
 
 Additionally, you can control the tone of the `variance` by sliding the range up and down.
 
-# api
+# API
 
-All properties available through the editor ui are also available via the api. For examples of api use, please see the `Assets/Wavy McFormface/Examples` directory (_specifically the [Scripts](/Assets/Wavy%20McFormface/Examples/Scripts) directory_). These scenes are playable. To run them you will need the [Standard Assets](https://assetstore.unity.com/packages/essentials/asset-packs/standard-assets-32351) package installed.
+All properties available through the editor UI are also available via the API. For examples of API use, please see the `Assets/Wavy McFormface/Examples` directory (_specifically the [Scripts](/Assets/Wavy%20McFormface/Examples/Scripts) directory_). These scenes are playable. To run them you will need the [Standard Assets](https://assetstore.unity.com/packages/essentials/asset-packs/standard-assets-32351) package installed.
 
 ## Lerping
 
