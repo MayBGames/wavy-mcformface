@@ -234,7 +234,7 @@ Additionally, you can control the tone of the `variance` by sliding the range up
 
 # api
 
-All properties available through the editor ui are also available via the api. For examples of api use, please see the `Wavy McFormface/Assets/Wavy McFormface/Examples` directory. These scenes are playable. To run them you will need the [Standard Assets](https://assetstore.unity.com/packages/essentials/asset-packs/standard-assets-32351) package installed.
+All properties available through the editor ui are also available via the api. For examples of api use, please see the `Assets/Wavy McFormface/Examples` directory (specifically the [Scripts](/Assets/Wavy%20McFormface/Examples/Scripts) directory). These scenes are playable. To run them you will need the [Standard Assets](https://assetstore.unity.com/packages/essentials/asset-packs/standard-assets-32351) package installed.
 
 ## Lerping
 
