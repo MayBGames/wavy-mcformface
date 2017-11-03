@@ -65,6 +65,43 @@ It's important to note that you can have multiple scripts reference the same Con
 
 There are several sections of the editor ui, each with their own purpose. Below we go through each section in turn.
 
+## Overview
+
+Wavy McFormface has five types of properties:
+
+* AnimationCurve
+* Float
+* Integer
+* Range
+* Time
+
+AnimationCurve, Float, Range, and Integer property types may be edited in real time while in Play Mode. Time properties may not be edited in real time in Play Mode.
+
+AnimationCurve properites are:
+
+* Envelope attack and decay curves
+* Harmonics
+* Frequency Limit
+* Wibble Wobble pattern curve
+* Noise pattern curve
+
+Float properties are:
+
+* Master Volume
+* Sine, Square, Sawtooth, and Triangle Wave Volumes
+* Noise level
+
+The single Integer property is:
+
+* Play Controls current octave
+
+The two Range properties are:
+
+* Play Controls octave range
+* Noise variance
+
+The Envelope attack/decat times as well as the Wibble Wobble Time fields are all Time values and may not be edited in real time while in Play Mode.
+
 ## Configie and Master Volume
 
 ![Configie and Master Volume editor ui section](/Screenshots/Configie%20and%20Master%20Volume.png?raw=true "Configie and Master Volume editor ui section")
