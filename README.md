@@ -164,10 +164,28 @@ The `attack` and `decay` AnimationCurves give you absolute control over exactly 
 
 The Harmonics AnimationCurves allow you to specify how loud harmonic octaves should be relative to the current octave.
 
-The grey bars behind the AnimationCurves show you where each octave is at - making it easy to visally get an idea how loud each octave is.
+The grey bars behind the AnimationCurves show you where each rendered octave is at - making it easy to visally get an idea how loud each octave is.
 
 ### Hamronic details
 
 ![Harmonics showing details editor ui section](/Screenshots/Harmonics%20with%20details.png?raw=true "Harmonics showing details editor ui section")
 
 The Details section provides info on the volume level for each octave below and above the current octave.
+
+_**IMPORTANT NOTE**_ The volume range for harmonic octaves is bounded to 0.0 - 1.0. Since harmonic volumes are just AnimationCurves, this can be changed via the api. **Do not change the default volume bounds for harmonic octaves. Doing so may damage your audio equipliment and damage your ears.**
+
+## Frequency Limit
+
+![Frequency Limit without details editor ui section](/Screenshots/Frequency%20Limit%20no%20details.png?raw=true "Frequency Limit without details editor ui section")
+
+**This AnimationCurve _may_ be updated in real time while in Play Mode**
+
+The Frequency Limit curve is like an advanced volume control for all rendered frequencies of your waveform.
+
+The grey bars behind the AnimationCurve show you where each rendered octave is at - making it easy to visally get an idea how loud each octave is.
+
+Using the AnimationCurve you can control the volumes of every octave and note rendered in your waveform to a high degree of precision.
+
+![Frequency Limit showing details editor ui section](/Screenshots/Frequency%20Limit%with%20details.png?raw=true "Frequency Limit showing details editor ui section")
+
+The Frequency Limit details shows the exact volume level of each rendered octave relative to the current octave.
