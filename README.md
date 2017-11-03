@@ -188,4 +188,61 @@ Using the AnimationCurve you can control the volumes of every octave and note re
 
 ![Frequency Limit showing details editor ui section](/Screenshots/Frequency%20Limit%20with%20details.png?raw=true "Frequency Limit showing details editor ui section")
 
-The Frequency Limit details shows the exact volume level of each rendered octave relative to the current octave.
+The Frequency Limit details shows the exact volume level of each rendered octave.
+
+The volume range is between 0.0 (_completely silent_) and 1.0 (_full volume_).
+
+## Wibble Wobble
+
+This one is fun :metal:
+
+![Wibble Wobble editor ui section](/Screenshots/Wibble%20Wobble.png?raw=true "Wibble Wobble editor ui section")
+
+The official name for this control in synth parlance is [Pitch Shift](https://en.wikipedia.org/wiki/Pitch_shift "Wikipedia page") - but I didn't know that when I was building this plugin so I called it Wibble Wobble (which is more fun anyway).
+
+The wibble Wibble uses the AnimationCurve to specify how to bend you're waveform's pitch. The bend pattern repeats according the the time units specified.
+
+## Noise
+
+Ok... this one's a doozy :grin:
+
+![Noise editor ui section](/Screenshots/Noise.png?raw=true "Noise editor ui section")
+
+The Noise section has three parts:
+
+* variance
+* level
+* pattern (_the AnimationCurve_)
+
+We'll go through each part in reservse order as that will make more sense:
+
+#### pattern
+
+This AnimationCurve defined the noise pattern for waveform sample. This `pattern` will repeat for each call to `OnAudioFilterRead`. While this `pattern` does give shape and texture to your waveform, it is not the same as the Wibble Wobble pattern. This `pattern` is for providing suble texture changes and nuances in your waveform.
+
+#### level
+
+The `level` determines to what extent the `pattern` and `variance` distort the waveform. A value of 0 means the `pattern` and `variance` do not distort the waveform at all. As the `level` value increases `pattern` and `variance` distort the waveform to a greater extent.
+
+#### variance
+
+This range defines how far noise may deviate from the specified `pattern`. The "noise" provided by this control is a function of random deviations from the specified `pattern`, amplified by `level`.
+
+A narrow `variance` range means the injected noise will only deviate slightly from the specified `pattern`. A wide `variance` means that more random noise deviations will be applied to the waveform as they will fall within the specified `varaince` range.
+
+Additionally, you can control the tone of the `variance` by sliding the range up and down.
+
+# api
+
+All properties available through the editor ui are also available via the api. For examples of api use, please see the `Wavy McFormface/Assets/Wavy McFormface/Examples` directory. These scenes are playable. To run them you will need the [Standard Assets](https://assetstore.unity.com/packages/essentials/asset-packs/standard-assets-32351) package installed.
+
+## Lerping
+
+There are two different speeds that Wavy lerps at when animating between property values:
+
+* Slow: This lerp takes one full second to complete
+* Fast: This lerp takes one full sample pass to complete (_1/48th of a second on desktop, 1/24th of a second on mobile_)
+
+All AnimationCurve properties lerp at the slow speed. This is to prevent audio artifacts like popping - which are caused by changing values too quickly.
+
+All animatiable non-AnimationCurve properties lerp at the fast speed. This is because changes in these values values an be animated faster without causing artifacts.
