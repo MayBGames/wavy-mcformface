@@ -30,6 +30,7 @@ You may need to restart Unity for it to pick up that Wavy was added to the proje
 * __Tools -> Wavy McFormface -> New Waveform__ (or _CTRL + ALT + SHIFT + W_)
 * Add `Wavy Mc Formface` component to `GameObject` in scene
 * Add `Audio Source` component to same `GameObject` Wavy was added to
+* Play around :raised_hands:
 
 ### Details
 
